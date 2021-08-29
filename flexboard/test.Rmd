@@ -1,5 +1,5 @@
 ---
-title: "Flexboard Title"
+title: "Flexboard Test"
 output: 
   flexdashboard::flex_dashboard:
     theme: journal
@@ -9,6 +9,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+# Forecasting example from https://otexts.com/fpp3/
+
 library(dplyr)
 library(fable)
 library(tsibble)
