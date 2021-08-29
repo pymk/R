@@ -1,0 +1,65 @@
+---
+title: "Flexboard Title"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: journal
+    orientation: rows
+    vertical_layout: fill
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(fable)
+library(tsibble)
+
+tourism_melb <- tourism %>%
+  filter(Region == "Melbourne")
+
+tourism_melb %>%
+  group_by(Purpose) %>%
+  slice(1)
+
+tourism_melb %>%
+  autoplot(Trips)
+
+fit <- tourism_melb %>%
+  model(
+    ets = ETS(Trips ~ trend("A")),
+    arima = ARIMA(Trips)
+  )
+
+fc <- fit %>%
+  forecast(h = "5 years")
+```
+
+Column {data-width=700}
+-----------------------------------------------------------------------
+
+### Visiting
+
+```{r}
+fc %>%
+  dplyr::filter(Purpose == "Visiting") %>% 
+  autoplot(tourism_melb)
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Holiday
+
+```{r}
+fc %>%
+  dplyr::filter(Purpose == "Holiday") %>% 
+  autoplot(tourism_melb)
+```
+
+### Business
+
+```{r}
+fc %>%
+  dplyr::filter(Purpose == "Business") %>% 
+  autoplot(tourism_melb)
+```
+
