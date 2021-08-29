@@ -1,5 +1,6 @@
 requireNamespace("assertr")
 requireNamespace("dplyr")
+requireNamespace("glue")
 requireNamespace("janitor")
 requireNamespace("magrittr")
 requireNamespace("purrr")
@@ -50,29 +51,43 @@ top_n_pivot <- top_n %>%
   dplyr::arrange(dplyr::desc(year), rank)
 
 # Plot data ----------------------------------------------------------------------------------------
-name_oi <- "Tyrion"
-sex_oi <- "male"
+name_oi <- "Blake"
+sex_oi <- c("male", "female")
 year_limit_oi <- 1950
 
-ggplot2::ggplot(
-  data = subset(compiled_dataset, year > year_limit_oi & first_name == name_oi & sex == sex_oi),
-  mapping = ggplot2::aes(x = year, y = count)
-) +
-  ggplot2::geom_line(linetype = "dashed", mapping = ggplot2::aes(group = 1)) +
-  ggplot2::geom_point(colour = "steelblue") +
+compiled_dataset %>%
+  dplyr::filter(
+    first_name == name_oi,
+    sex %in% sex_oi,
+    year >= year_limit_oi
+  ) %>%
+  ggplot2::ggplot(
+    mapping = ggplot2::aes(x = year, y = count, group = sex)
+  ) +
+  ggplot2::geom_line(
+    linetype = "dashed",
+    alpha = 0.5,
+    mapping = ggplot2::aes(color = sex)
+  ) +
+  ggplot2::geom_point(
+    mapping = ggplot2::aes(color = sex)
+  ) +
+  ggplot2::scale_x_discrete(
+    breaks = scales::pretty_breaks(10)
+  ) +
   ggplot2::scale_y_continuous(
     labels = scales::comma,
     breaks = scales::pretty_breaks(5)
   ) +
   ggplot2::labs(
-    title = paste0("Popularity of the name '", name_oi, "' (", sex_oi, ")"),
+    title = paste0("Popularity of the name '", name_oi, "' (", paste0(unique(sex_oi), collapse = ", "), ")"),
     x = "Year",
     y = "Births (n)",
-    colour = "Sex"
+    colour = "",
   ) +
-  ggplot2::scale_color_brewer(palette = "Set2") +
+  ggplot2::scale_color_manual(values = c("female" = "#FD6467", "male" = "#7294D4")) +
   ggplot2::theme_minimal(base_size = 14) +
   ggplot2::theme(
-    legend.position = "Right",
+    legend.position = "top",
     axis.text.x = ggplot2::element_text(angle = -90, vjust = 0.5, hjust = 1)
   )
