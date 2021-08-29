@@ -12,15 +12,15 @@ library(magrittr)
 # Load data ----------------------------------------------------------------------------------------
 # Get a list of files and store the paths in a list.
 # Dataset from: https://www.ssa.gov/oact/babynames/limits.html
-name_ls <- list.files("~/Code/R/datasets/names/", full.names = TRUE, pattern = "*.txt")
+name_ls <- list.files("~/Code/R/datasets/names", full.names = TRUE, pattern = "*.txt")
 
-# Name the items in the list by the year of birth (yob)
-names(name_ls) <- stringr::str_remove_all("yob|.txt")
+# Extract the year from the filenames
+names(name_ls) <- stringr::str_remove_all(name_ls, pattern = ".*/|yob|.txt")
 
 # Wrangle data -------------------------------------------------------------------------------------
 # Combine all the individual files into one dataset.
 compiled_dataset <- purrr::map_df(
-  .x = f_ls,
+  .x = name_ls,
   .id = "year",
   .f = rio::import,
   format = ",",
