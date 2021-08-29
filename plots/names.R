@@ -13,6 +13,7 @@ library(magrittr)
 # Load data ----------------------------------------------------------------------------------------
 # Get a list of files and store the paths in a list.
 # Dataset from: https://www.ssa.gov/oact/babynames/limits.html
+# Copied to: https://pymkdb-public.s3.us-west-1.amazonaws.com/datasets/names.zip
 name_ls <- list.files("~/Code/R/datasets/names", full.names = TRUE, pattern = "*.txt")
 
 # Extract the year from the filenames

@@ -1,61 +1,42 @@
-requireNamespace("assertr")
-requireNamespace("dplyr")
-requireNamespace("ggplot2")
-requireNamespace("glue")
-requireNamespace("janitor")
-requireNamespace("magrittr")
-requireNamespace("purrr")
-requireNamespace("rio")
-requireNamespace("shiny")
-requireNamespace("stringr")
-requireNamespace("tidyr")
-
-library(magrittr)
-
-ui <- shiny::fluidPage(
-  shiny::titlePanel("Name Trends"),
-  shiny::sidebarLayout(
-    # Dropdown menu for Sex and slidebar for years
-    sidebarPanel = shiny::sidebarPanel(
-      # text input for name
-      shiny::textInput(
-        inputId = "name_oi",
-        label = "Name of Interest",
-        value = "Tyrion"
-      ),
-      # dropdown for sex
-      shiny::selectInput(
-        inputId = "sex_oi",
-        label = "Sex of Interest",
-        choices = c("female", "male"),
-        selected = c("male", "female"),
-        multiple = TRUE
-      ),
-      # slidebar for years
-      shiny::sliderInput(
-        inputId = "year_oi",
-        label = "Year of Interest",
-        min = 1880,
-        max = 2020,
-        value = c(1997, 2020),
-        step = 1,
-        sep = ""
-      )
-    ),
-    #
-    mainPanel = shiny::mainPanel(
-      shiny::plotOutput(outputId = "plot")
-    )
-  )
-)
-
 server <- function(input, output) {
   # Load data --------------------------------------------------------------------------------------
   # Get a list of files and store the paths in a list.
   # "National data" from: https://www.ssa.gov/oact/babynames/limits.html
-  name_ls <- list.files("~/Code/R/datasets/names", full.names = TRUE, pattern = "*.txt")
+  # name_ls <- list.files("~/Code/R/datasets/names", full.names = TRUE, pattern = "*.txt")
 
-  # Extract the year from the filenames
+  dataset_url <- "https://pymkdb-public.s3.us-west-1.amazonaws.com/datasets/names.zip"
+  dataset_zip <- "names.zip"
+  dataset_unzip <- "names_data/"
+
+  # Progress bar to notify user something is happening
+  shiny::withProgress(
+    message = "Downloading data...",
+    value = 0, {
+      shiny::incProgress(1 / 10)
+      shiny::incProgress(2 / 10)
+      download.file(dataset_url, destfile = dataset_zip, mode = "wb")
+    }
+  )
+
+  # Progress bar to notify user something is happening
+  shiny::withProgress(
+    message = "Extracting data.",
+    detail = glue::glue("Unzipping data to {dataset_unzip}"),
+    value = 0, {
+      shiny::incProgress(1 / 10)
+      shiny::incProgress(2 / 10)
+      unzip(zipfile = dataset_zip, exdir = dataset_unzip, overwrite = TRUE)
+    }
+  )
+
+  if (file.exists(dataset_zip)) {
+    file.remove(dataset_zip)
+  }
+
+  # List of files
+  name_ls <- list.files(dataset_unzip, full.names = TRUE, pattern = "*.txt")
+
+  # Get the year from the filenames and set it as row names to be extracted later
   names(name_ls) <- stringr::str_remove_all(name_ls, pattern = ".*/|yob|.txt")
 
   # Wrangle data -----------------------------------------------------------------------------------
@@ -118,5 +99,3 @@ server <- function(input, output) {
       )
   })
 }
-
-shiny::shinyApp(ui = ui, server = server)
