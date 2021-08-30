@@ -3,4 +3,4 @@
 ### Latest Project
 [Name Trends R Shiny App](https://pymk.shinyapps.io/name_trends/)
 
-![Name Trends](https://user-images.githubusercontent.com/9125028/131269392-b09de2d6-1aed-44e1-8d90-d8f97b4c9075.png)
+![Name Trends](https://user-images.githubusercontent.com/9125028/131270225-5c752095-da71-4abc-be09-9cd2ea05578e.png)
