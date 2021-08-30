@@ -19,6 +19,7 @@ ui <- shiny::fluidPage(
     "Using the national dataset from ",
     shiny::code("https://www.ssa.gov/oact/babynames/limits.html")
   ),
+  shiny::p("Source code is available at ", shiny::a("github.com/pymk", href = "https://github.com/pymk/")),
   shiny::sidebarLayout(
     # Sidebar --------------------------------------------------------------------------------------
     # Dropdown menu for Sex and slidebar for years
