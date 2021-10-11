@@ -1,0 +1,614 @@
+---
+title: "Simple R"
+subtitle: "Session 01"
+output:
+  html_document:
+    theme: sandstone
+    highlight: tango
+---
+
+```{css echo=FALSE}
+body {
+  line-height: 20px;
+}
+
+code.r {
+  font-size: 12px;
+  line-height: 20px;
+}
+
+h2 {
+  background-color: #263238;
+  color: #fafafa;
+}
+
+table {
+   margin:1em auto;
+}
+
+.nav-pills>li>a {
+  color: #fafafa;
+  background-color: #263238;
+}
+
+.nav-pills>li>a:hover, .nav-pills>li>a:focus, .nav-pills>li.active>a,
+.nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+  color: white;
+  background-color: #af4448;
+}
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+library(magrittr)
+```
+
+I started this project to help a friend learn basic R.
+
+The intended audience is for folks who do not have any prior coding experience.
+
+- If you are already have coding experience (e.g. Python), I recommend Hadley's [R for Data Science](https://r4ds.had.co.nz/)
+- If you are already familiar with R, I recommend Hadley's [Advanced R](https://adv-r.hadley.nz/)
+
+## Installation {.tabset .tabset-fade .tabset-pills}
+
+Download and install the two requirements:
+
+### R {#downloadr}
+
+Download the pre-compiled R binary from [https://cloud.r-project.org/](https://cloud.r-project.org/)
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/R_download_2021-10-10_10.48.56.png)
+
+---
+
+### RStudio {#downloadrstudio}
+
+Download the open-source RStudio Desktop edition from [https://rstudio.com/products/rstudio/](https://www.rstudio.com/products/rstudio/)
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/RStudio_download_2021-10-10_10.50.30.png)
+
+---
+
+## Configuration {.tabset .tabset-fade .tabset-pills}
+
+### Setup {#setup}
+
+Go to RStudio Preferences and under the "General" tab, uncheck the boxes highlighted in the screenshot below and select "Never" from the drop-down menu.
+
+This will ensure that your RStudio starts cleanly each time.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_setting_2021-10-10_11.10.14.jpg)
+
+---
+
+### Themes {#themes}
+
+Under the "Appearance" tab, you can change the look and feel of RStudio.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_theme_2021-10-10_11.28.57.png)
+
+Additional themes can be downloaded:
+
+- [https://github.com/lusignan/RStudio-Material-Theme](https://github.com/lusignan/RStudio-Material-Theme)
+- [https://github.com/max-alletsee/rstudio-themes](https://github.com/max-alletsee/rstudio-themes)
+- Google for more
+
+### Customize {#customize}
+
+I recommend changing the pane layout to have R Console to be on top right corner.
+
+With this setup, you will have more room and can more easily see the output of your code as you run them.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/rstudio_panels_2021-10-10_11.31.38.png)
+
+---
+
+### Download Packages {#downloadpkg}
+
+There are two ways to install packages in R.
+
+1. Run in RStudio Console:
+
+- `install.packages(c("tidyverse", "devtools", "janitor"))`
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_package_install_command_2021-10-10_11.37.06.png)
+
+2. Navigate to the "Packages" tab and click on the "Install" button.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_package_install_tab_2021-10-10_11.36.47.png)
+
+---
+
+## RStudio Interface {#interface}
+
+Familiarize yourself with RStudio:
+
+1. **<span style="color: #DE3163;">Pink</span>**: Creating new R scripts. As you can see, we have two R files open (one called "01.Rmd" and the other is "Untitled1").
+2. **<span style="color: #FF7F50;">Orange</span>**: Runs the R code for the selected (highlighted) lines.
+3. **<span style="color: #24d55f;">Green</span>**: R Console. The output, messages, warnings, and errors for the ran R code would appear here.
+4. **<span style="color: #6495ED;">Blue</span>**: The Environment will show us the stored data we have in our session.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/rstudio_interface_2021-10-10_11.42.09.jpg)
+
+---
+
+## End-Goal {#endgoal}
+
+Create a new R script (<kbd>⌘ Command</kbd> + <kbd>⇧ Shift</kbd> + <kbd>N</kbd>), then copy and paste the chunk of code you see below.
+
+Run the script (highlight the entire code and hit <kbd>⌘ Command</kbd> + <kbd>↩ Enter</kbd>) to see the output in the "Viewer" panel.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_the_daily_show_plot_2021-10-10_12.01.12.png)
+
+The goal of this session is to understand this code once we [dive in](#attach).
+
+```{r attr.source=".numberLines"}
+library(magrittr)
+
+github_page <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/daily-show-guests/"
+file_name <- "daily_show_guests.csv"
+url <- paste0(github_page, file_name)
+
+daily_show_guests <- readr::read_csv(url) %>% 
+  janitor::clean_names()
+
+dsg_table <- daily_show_guests %>%
+  dplyr::filter(group %in% c("Acting", "Comedy", "Media", "Musician", "Politician", "Media")) %>%
+  dplyr::count(year, group)
+
+ggplot2::ggplot(
+  data = dsg_table,
+  mapping = ggplot2::aes(x = as.factor(year), y = n, fill = group)
+) +
+  ggplot2::geom_col() +
+  ggplot2::labs(title = "The Daily Show Guests", x = "Year", y = "Guests (n)") +
+  ggplot2::theme(
+    legend.position = "right",
+    axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, size = 12)
+  ) +
+  ggplot2::ylim(0, 200) +
+  ggplot2::scale_fill_brewer(palette = "Accent") +
+  ggplot2::guides(
+    color = "none",
+    size = "none",
+    fill = ggplot2::guide_legend(title = "Category")
+  )
+```
+
+This chunk of code reads a CSV file from the internet, creates a summary, then plots the data.
+
+The input dataset ([daily_show_guests.csv](https://raw.githubusercontent.com/fivethirtyeight/data/master/daily-show-guests/daily_show_guests.csv)) looks like this:
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_daily_show_data_2021-10-10_19.09.38.png)
+
+But before we can jump in, let's learn a few terminologies.
+
+---
+
+## Terminology {.tabset .tabset-fade .tabset-pills}
+
+- **Code**: a set of instructions
+- **Function**: a named piece of code
+- **Package**: a collection of functions
+- **Variable**: an object that stores different types of data
+- **Data Type**: such as strings, integer, and logical
+- **Pipe `%>%` **: the pipe function
+- **Miscellaneous**: other miscellaneous things like commenting in code
+
+---
+
+### Code {#code}
+
+Code provides a set of instructions to the system to perform an operation.
+
+**Cooking analogy**: a set of instructions on how to make a something.
+
+The example below is the code to print a table.
+
+```{r class.output="scroll-100"}
+d <- dim(x)
+if (any(d == 0)) {
+  cat(
+    "< table of extent", paste(d, collapse = " x "),
+    ">\n"
+  )
+  return(invisible(x))
+}
+xx <- format(unclass(x), digits = digits, justify = justify)
+if (any(ina <- is.na(x))) {
+  xx[ina] <- na.print
+}
+if (zero.print != "0" && any(i0 <- !ina & x == 0)) {
+  xx[i0] <- zero.print
+}
+print(xx, quote = quote, right = right, ...)
+invisible(x)
+```
+
+---
+
+### Function {#function}
+
+A named piece of code that performs a specific task. Instead of repeating a chunk of code multiple times, we can give it a name and simply refer to it using that name.
+
+For example, we assign the following title to a function called "daenerys_title". This way, we can simply use `daenerys_title()` each time instead of repeating this whole block:
+
+<div style="color: #9c9c9c; padding-left: 10px; font-style: italic;">
+Queen Daenerys Stormborn of the House Targaryen, the First of Her Name, Queen of the Andals, the Rhoynar and the First Men, Lady of the Seven Kingdoms and Protector of the Realm, Lady of Dragonstone, Queen of Meereen, Khaleesi of the Great Grass Sea, the Unburnt, Breaker of Chains and Mother of Dragons.
+</div>
+
+A function name is followed by parenthesis: `func_name()`
+
+- `print()`
+- `save()`
+- `open()`
+- `write()`
+
+**Cooking analogy**: a function is a named recipe. For example, a `pasta()` recipe.
+
+```{r}
+pasta()
+lasagna()
+pizza()
+```
+
+Using functions is advantageous:
+
+- Avoids code repetition
+- Updating code is easier
+- Code is easier to read
+
+---
+
+### Package {#package}
+
+A collection of functions. Package names are followed by two colons: `pkg_name::func_name()`
+
+**Cooking analogy**: a package is a cookbook. For example, a `vegetarian` cookbook (package) that contains many recipes (functions).
+
+```{r}
+vegetarian::pizza()
+vegetarian::tacos()
+vegetarian::soup()
+```
+
+It is important to specify the package name when using a function.
+
+So instead of `pizza()`, we should write `vegetarian::pizza()`. This is called "qualifying" our function.
+
+The reason we want to do this is because multiple function names could exist from different packages.
+
+For example:
+
+```{r}
+meat_lovers::pizza()
+meat_lovers::tacos()
+meat_lovers::soup()
+```
+
+**Cooking analogy**: qualifying a functions is like specifying from which cookbook the recipe was taken.
+
+**Note:** When it comes to qualifying functions, there are a few exception. For example, the "base R" packages (e.g. "base", "stats", "utils") that are pre-loaded when you start R do not require qualifying. For example, we would write `print()` instead of `base::print()`.
+
+The other exception is the pipe (`%>%`) function that is discussed in the "Pipe" section.
+
+The auto-complete helps us identify the correct function by showing the package in curly braces.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_multiple_functions_2021-10-10_16.05.20.png)
+
+Further reading on [namespaces](https://r-pkgs.org/namespace.html#search-path)
+
+---
+
+### Parameters {#parameters}
+
+Also referred to as "arguments". Allows us to pass a piece of information as input to the function.
+
+**Cooking analogy**: ingredients or other details. For example, the type of cheese or level of spice.
+
+```{r}
+vegetarian::pizza(extra_cheese = FALSE)
+vegetarian::tacos(spicy_level = 5)
+```
+
+Each function will have its own set of parameters and accepted values. The documentation of the function will provide the necessary information and examples on how to use the function.
+
+```{r}
+temperature::convert(degrees = 50, units = "celsius")
+temperature::convert(degrees = 50, units = "fahrenheit")
+```
+
+To learn how to use a function, put a question mark (`?`) in front of it and run it in Console.
+
+For example `?rm()` or `?dplyr::if_else()`
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_help_2021-10-10_16.09.13.png)
+
+---
+
+### Variable {#variable}
+
+An object that stores different types of data.
+
+Similar to how we solve for `x` and `y` in math class.
+
+- x = 2
+- y = 3
+- x + y = 5
+
+Instead of using `=`, we use the assignment operators: `<-`
+
+On macOS, the shortcut for this is <kbd>⌃ Control</kbd> + <kbd>-</kbd>
+
+```{r eval=TRUE, collapse=TRUE}
+x <- 2
+y <- 3
+z <- x + y
+
+print(z)
+```
+
+Further reading on [assignment operator](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/assignOps)
+
+---
+
+### Data Type {#datatype}
+
+- **String**: also called "character", they are surrounded by quotes (e.g. `"Hello, world!"`)
+- **Double**: short for double-precision floating points, they are numbers with decimal points (e.g. `3.14` or `1.2e3`)
+- **Integer**: whole numbers, followed by an "L" suffix (e.g. `42L` -- or if you are just starting out, simply use `42` to use doubles instead)
+- **Logical**: `TRUE` or `FALSE` (all uppercase)
+
+```{r eval=TRUE}
+lord_voldemort <- "Tom Marvolo Riddle"
+hogwarts_platform <- 9.75
+num_of_horcruxes <- 8L
+dumbledore_alive <- FALSE
+```
+
+Checking data types for the variables above by using the `typeof()` function:
+
+```{r eval=TRUE, collapse=TRUE}
+typeof(lord_voldemort)
+typeof(hogwarts_platform)
+typeof(num_of_horcruxes)
+typeof(dumbledore_alive)
+```
+
+Data types are important, especially when performing operations.
+
+For example, you cannot subtract a numeric value from a string:
+
+```{r eval=TRUE, error=TRUE, collapse=TRUE}
+100 - "two"
+
+100 - "2"
+```
+
+Further reading on [data types](https://adv-r.hadley.nz/vectors-chap.html)
+
+---
+
+### Pipe `%>%` {#pipe}
+
+The pipe (from the `magrittr` package) allows us to chain together multiple steps.
+
+For example, if we want to add two numbers together and print the result, we would write:
+
+```{r}
+2 + 3 %>% print()
+```
+
+Without the pipe, the same expression could be written as `print(2 + 3)`. One beauty of piping is that it helps with reading the code in a more natural flow: left-to-right (or top-down) versus inside-out.
+
+In a more complex example, we could read a CSV file, filter the data, summarize it, and export the results.
+
+```{r}
+example::read_csv() %>%
+  example::filter() %>%
+  example::summarize() %>%
+  example::export()
+```
+
+In order to use the pipe, we will attach the `magrittr` package (sometimes called "loading" a package) in the beginning of our code. We can see this in the example code in the ["End-Goal" section](#endgoal):
+
+```{r}
+library(magrittr)
+```
+
+Then we can use the pipe throughout our code without specifying the package name.
+
+On macOS, the keyboard shortcut for the pipe is <kbd>⌘ Command</kbd> + <kbd>⇧ Shift</kbd> + <kbd>M</kbd>
+
+Further reading on [pipes](https://r4ds.had.co.nz/pipes.html)
+
+---
+
+### Miscellaneous {#misc}
+
+**Comments** can be added to our code by adding `#` to the beginning of the line.
+
+```{r}
+# This is a comment
+#
+# The code below will add 2 and 3, then prints the results.
+2 + 3 %>%
+  print()
+```
+
+On macOS, the keyboard shortcut for commenting/uncommenting a line is <kbd>⌘ Command</kbd> + <kbd>⇧ Shift</kbd> + <kbd>C</kbd>
+
+---
+
+## The Goods {.tabset .tabset-fade .tabset-pills}
+
+### Attach Packages {#attach}
+
+Let's examine the first line of the code that [we saw earlier](#endgoal).
+
+```{r attr.source=".numberLines"}
+library(magrittr)
+```
+
+As mentioned in the "Pipe" section, we are attaching the `magrittr` package (sometimes called "loading" a package) in the beginning of our code. This allows us to use the pipe (`%>%`) in our code without having to qualify it each time: ```magrittr::`%>%`()```
+
+The pipe is used often enough that attaching the `magrittr` package is justified. Additionally, the functions in this package are unique and should not pose any conflicts with other packages.
+
+Another package with unique functions that is sometimes attached is `ggplot2`, which is used for creating graphics. Personally, I do not attach this package, but this is a matter of personal preference.
+
+---
+
+### Read File {#readfile}
+
+Next in our code, we have the following four lines:
+
+```{r attr.source=".numberLines startFrom=3"}
+github_page <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/daily-show-guests/"
+file_name <- "daily_show_guests.csv"
+url <- paste0(github_page, file_name)
+
+daily_show_guests <- readr::read_csv(url) %>% 
+  janitor::clean_names()
+```
+
+Lets break it down:
+
+- **Line 3**: creates the `github_page` variable by assigning it a string (part of our URL)
+- **Line 4**: creates the `file_name` variable by assigning it to a string (the file name)
+- **Line 5**: creates the `url` variable by assigning it to the output of the `paste0()` function. This function concatenates strings, so the ouput is the joined values from `github_page` and `file_name`
+  - We could have directly assigned the full URL to a variable like you see below:
+  - `url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/daily-show-guests/daily_show_guests.csv"`
+- **Line 6**: empty line to help with reading of the code by grouping related lines together
+- **Line 7**: create the `daily_show_guests` variable and assign it to the result of the following two chains: first, use the `readr::read_csv` function to read the CSV file by providing file path (this path is a required input parameter for the `read_csv()` function).
+  - The CSV file is read and turned into an R dataframe "object" that can be viewed and manipulated in R
+- **Line 8**: secondly, we pipe the result (the R dataframe object) to the `janitor::clean_names()` function
+  - The `clean_name()` function cleans the column names (e.g. replaces spaces with "_")
+
+So knowing this, if we want to read a local file instead, we could do the following:
+
+```{r}
+# CSV file
+example_csv <- readr::read_csv("~/Desktop/file_1.csv")
+
+# TSV file
+example_tsv <- readr::read_csv("~/Desktop/file_2.tsv")
+
+# Read semicolon-separated text file
+example_other <- readr::read_delim("~/Desktop/file_3.txt", delim = ";")
+```
+
+**Note:**
+
+- Notice that the last example takes an additional parameter (`delim`) to specify the character to use to deliminated the text file.
+- The `readxl` package can be used to read Excel files (hint: use the Help tab to learn how to use this package)
+- The `googlesheets4` package can be used to read data from Google Sheets (will be covered in another session)
+
+Further reading on [readr package](https://readr.tidyverse.org/)
+
+---
+
+### Filter {#filter}
+
+Next, we have these two lines of codes:
+
+```{r attr.source=".numberLines startFrom=10"}
+dsg_table <- daily_show_guests %>%
+  dplyr::filter(group %in% c("Acting", "Comedy", "Media", "Musician", "Politician", "Media")) %>%
+```
+
+- **Line 10**: create the `dsg_table` variable by assigning it to the output of `daily_show_guests`, which is piped into the next line
+- **Line 11**: filter the data (`daily_show_guests`) by looking at the `group` column and keep records where "Acting", "Comedy", "Media", "Musician", "Politician", or "Media" appear.
+
+This is like using the filter function in a spreasheet where we can pick the values we want.
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_filter_spreadsheet_2021-10-10_19.13.23.png)
+
+The syntax for filtering is as follows:
+
+```{r}
+# Single value
+dataset %>% dplyr::filter(column_name == "value")
+
+# Multiple values
+dataset %>% dplyr::filter(column_name %in% c("value_1", "value_2"))
+
+# Another example
+dataset %>% dplyr::filter(column_name %in% c("value_1", 100, FALSE))
+```
+
+**Note:**
+
+- Use `==` to filter for a specific (and exact) value
+- Use `!=` to filter out (remove) a specific (and exact) value
+- Use `%in%` to filter for multiple (and exact) values
+  - The values of interest should be encapsulated in a `c()` function
+  - Example: `c(1, 2, 3)` or `c("hello", "goodbye")`
+- Add `!` in front of the column name to inverse the `%in%` filter (i.e. "not in")
+  - Example: `dplyr::filter(!column_name %in% c(1, 2))`
+
+Further reading on [dplyr::filter](https://dplyr.tidyverse.org/reference/filter.html)
+
+---
+
+### Count {#count}
+
+Lastly, after the `daily_show_guests` object is filtered, we pipe it to `dplyr::count()` function:
+
+```{r attr.source=".numberLines startFrom=12"}
+  dplyr::count(year, group)
+```
+
+- **Line 13**: use the `dplyr::count()` function to count the unique values of `year` and `group` columns
+  - This is a summary function that tallies up unique values for a given `year` and `group`
+
+The end result is this dataset, which is assigned to `dsg_table` (see [line 10](#cb1-10)):
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_daily_show_count_2021-10-10_19.35.25.png)
+
+---
+
+### Plot {#ggplot}
+
+Lines 14-30 use the `ggplot2` package to create a barplot for the `dsg_table` dataset that we created.
+
+Notice that we are chaining together multiple functions, similar to what we were doing above. But instead of using `%>%`, we use `+` for `ggplot2`.
+
+```{r attr.source=".numberLines startFrom=14"}
+ggplot2::ggplot(
+  data = dsg_table,
+  mapping = ggplot2::aes(x = as.factor(year), y = n, fill = group)
+) +
+  ggplot2::geom_col() +
+  ggplot2::labs(title = "The Daily Show Guests", x = "Year", y = "Guests (n)") +
+  ggplot2::theme(
+    legend.position = "right",
+    axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, size = 12)
+  ) +
+  ggplot2::ylim(0, 200) +
+  ggplot2::scale_fill_brewer(palette = "Accent") +
+  ggplot2::guides(
+    color = "none",
+    size = "none",
+    fill = ggplot2::guide_legend(title = "Category")
+  )
+```
+
+The `ggplot2` package has lots of features and tons of customization options, so we will cover it in another session.
+
+As an example, the plot we saw in the ["End-Goal" section](#endgoal) can be reproduced with the first 5 lines of the code above (lines 14-18). Everything else (lines 19-30) is to customize the look and feel of the plot.
+
+```{r attr.source=".numberLines startFrom=14"}
+ggplot2::ggplot(
+  data = dsg_table,
+  mapping = ggplot2::aes(x = as.factor(year), y = n, fill = group)
+) +
+  ggplot2::geom_col()
+```
+
+![](https://pymkdb-public.s3.us-west-1.amazonaws.com/screenshots/r_daily_show_plot_raw_2021-10-10_19.46.16.png)
+
+Further reading on [ggplot2](https://ggplot2-book.org/) and [R graphics](https://r-graphics.org/)
+
+---
