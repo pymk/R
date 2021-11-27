@@ -8,6 +8,12 @@
 
 ---
 
+### ASOIAFR
+
+[A small R package](https://github.com/pymk/R/tree/master/asoiafr) to access the [An API of Ice And Fire](https://anapioficeandfire.com/Documentation) API service.
+
+---
+
 ### Name Trends R Shiny App
 
 The Shiny app is available here: [pymk.shinyapps.io](https://pymk.shinyapps.io/name_trends/)
