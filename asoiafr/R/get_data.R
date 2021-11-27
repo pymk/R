@@ -26,10 +26,9 @@
 #' characters_10 <- get_data("characters")
 #' }
 #' @importFrom dplyr mutate pull
-#' @importFrom glue glue
 #' @importFrom httr modify_url GET content http_type http_error status_code
 #' @importFrom jsonlite fromJSON
-#' @importFrom rlang arg_match
+#' @importFrom rlang arg_match is_missing
 #' @importFrom tibble as_tibble enframe
 get_data <- function(x, return_as_tibble = TRUE, ...) {
   params <- list(...)
@@ -39,6 +38,11 @@ get_data <- function(x, return_as_tibble = TRUE, ...) {
     arg = x,
     values = c("books", "characters", "houses")
   )
+
+  # Set "return_as_tibble" parameter to TRUE if it is missing
+  if (rlang::is_missing(return_as_tibble)) {
+    return_as_tibble <- TRUE
+  }
 
   # A boolean value is required for "return_as_tibble" parameter
   if (!is.logical(return_as_tibble)) {

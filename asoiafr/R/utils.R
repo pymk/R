@@ -13,7 +13,7 @@ fxn_get_params <- function(l) {
 # Ensure the "page" and "pageSize" parameters are numeric
 fxn_check_page <- function(x) {
   if (!is.numeric(x) & !is.na(x)) {
-    stop(glue::glue("Numeric value needs to be provided for 'page' and 'pageSize'"))
+    stop("Numeric value needs to be provided for 'page' and 'pageSize'")
   }
 }
 
