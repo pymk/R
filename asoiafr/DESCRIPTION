@@ -2,7 +2,7 @@ Type: Package
 Package: asoiafr
 Title: A Song of Ice and Fire R Package
 Description: This R package retrieves information from the "An API of Ice And Fire" API.
-Version: 1.0.0
+Version: 1.1.0
 Author: person("pymk", email = "github@ok.mozmail.com", role = c("aut", "cre"))
 Maintainer: pymk <github@ok.mozmail.com>
 URL: https://github.com/pymk/
@@ -15,5 +15,7 @@ Imports:
     jsonlite,
     magrittr,
     rlang,
+    testthat,
     tibble
 RoxygenNote: 7.1.2
+Config/testthat/edition: 3
