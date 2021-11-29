@@ -1,0 +1,20 @@
+Type: Package
+Package: pokemonr
+Title: Pokemon R Package
+Description: This R package retrieves information from the "PokeAPI" API.
+Version: 1.0.0
+Author: person("pymk", email = "github@ok.mozmail.com", role = c("aut", "cre"))
+Maintainer: pymk <github@ok.mozmail.com>
+URL: https://github.com/pymk/
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports: 
+    dplyr,
+    httr,
+    jsonlite,
+    magrittr,
+    purrr,
+    rlang,
+    testthat,
+    tibble
+RoxygenNote: 7.1.2
