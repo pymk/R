@@ -12,7 +12,7 @@
 
  ![Name Trends](https://user-images.githubusercontent.com/9125028/131270225-5c752095-da71-4abc-be09-9cd2ea05578e.png)
 
-- Pokemon Database: [pymk.shinyapps.io](https://pymk.shinyapps.io/shiny_pokemon/)
+- Pokémon Data: [pymk.shinyapps.io](https://pymk.shinyapps.io/shiny_pokemon/)
 
  ![Pokemon Database](https://user-images.githubusercontent.com/9125028/146690902-d6a808f1-cafc-4d96-98a1-e192375ad3c9.png)
 
@@ -37,4 +37,5 @@
  ![Plot Brands Facet](https://user-images.githubusercontent.com/9125028/140657864-27dd3d1d-f638-4497-8250-b08b4f7f264b.png)
 
 - **Simple R Tutorials**: I started this project to help a friend learn basic R.
+
  - [Session 01](https://pymk.github.io/simple_r/session_01.html)
