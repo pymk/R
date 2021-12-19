@@ -77,7 +77,7 @@ list_types <- list(
 
 ui <- shiny::fluidPage(
   # Title
-  shiny::titlePanel("Pokémon Database "),
+  shiny::titlePanel("Pokémon Database"),
   shiny::p(shiny::img(src = "pokeball.png"), "Just a little R Shiny practice with Pokémon. Data and images from ", shiny::a("veekun", href = "https://github.com/veekun/pokedex"), "and ", shiny::a("msikma.", href = "https://github.com/msikma/pokesprite")),
   shiny::p(shiny::img(src = "masterball.png"), "Source code is available at ", shiny::a("github.com/pymk", href = "https://github.com/pymk/R/tree/master/shiny/shiny_pokemon")),
   shiny::sidebarLayout(
