@@ -37,5 +37,4 @@
  ![Plot Brands Facet](https://user-images.githubusercontent.com/9125028/140657864-27dd3d1d-f638-4497-8250-b08b4f7f264b.png)
 
 - **Simple R Tutorials**: I started this project to help a friend learn basic R.
-
- - [Session 01](https://pymk.github.io/simple_r/session_01.html)
+  - [Session 01](https://pymk.github.io/simple_r/session_01.html)
