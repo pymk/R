@@ -7,9 +7,15 @@ fun_mode <- bslib::bs_theme(bootswatch = "sketchy")
 ui <- shiny::fluidPage(
   theme = normal_mode,
   shiny::titlePanel(title = "Amortization Table and Plot"),
-  shiny::span(
-    "Calculation is based on ",
-    shiny::a("Pecners' Mortgage Calculator", href = "https://github.com/Pecners/mortgage_calculator"),
+  shiny::span("Calculation is based on ",
+    shiny::a("Pecners' Mortgage Calculator",
+      href = "https://github.com/Pecners/mortgage_calculator"
+    ),
+    shiny::br(),
+    shiny::icon(name = "github", lib = "font-awesome"),
+    shiny::a("Source code for this Shiny app @pymk",
+      href = "https://github.com/pymk/R/tree/master/shiny/amortization"
+    ),
     style = "color:gray; font-size:0.8em"
   ),
   shiny::hr(),
