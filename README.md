@@ -8,6 +8,10 @@
 
 ### Shiny Apps
 
+- Amortization Table and Plots: [pymk.shinyapps.io](https://pymk.shinyapps.io/amortization/)
+
+ ![Amortization Table and Plots](https://user-images.githubusercontent.com/9125028/147417001-82f78d15-e13c-4658-8bd2-aafcda8bad67.png)
+
 - Name Trends: [pymk.shinyapps.io](https://pymk.shinyapps.io/name_trends/)
 
  ![Name Trends](https://user-images.githubusercontent.com/9125028/131270225-5c752095-da71-4abc-be09-9cd2ea05578e.png)
