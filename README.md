@@ -1,11 +1,5 @@
 # R Playground
 
-### Github Page
-
-[https://pymk.github.io/](https://pymk.github.io/)
-
----
-
 ### Shiny Apps
 
 #### Amortization Table and Plots: [pymk.shinyapps.io](https://pymk.shinyapps.io/amortization/)
