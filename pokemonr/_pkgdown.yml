@@ -1,0 +1,18 @@
+url: http://pymk.dev/R/
+template:
+  bootstrap: 5
+  theme: gruvbox-dark
+  bslib:
+    bg: "#dcdad7"
+    fg: "#46484b"
+    primary: "#3e3f45"
+    navbar-background: "#d8d6d2"
+    pkgdown-nav-height: 100px
+    base_font: {google: "Roboto"}
+    heading_font: {google: "Roboto Slab"}
+    code_font: {google: "Roboto Mono"}
+  trailing_slash_redirect: true
+
+home:
+  sidebar:
+    structure: [authors, dev]

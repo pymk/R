@@ -1,0 +1,47 @@
+---
+title: "Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pokemonr)
+```
+
+
+The examples below illustrate the two ways to obtain the Pokemon data using this package.
+
+### Pokemon Name
+
+Provide the Pokemon name
+
+```{r}
+get_pokemon("mew")
+```
+
+### Pokemon ID
+
+Provide the Pokemon ID
+
+```{r}
+get_pokemon(25)
+```
+
+### Parameters
+
+Use `limit` and `offset` parameters
+
+```{r}
+# Gen 1
+get_pokemon(limit = 151, offset = 0)
+```

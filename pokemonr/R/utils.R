@@ -41,7 +41,7 @@ fxn_tidy_single <- function(x) {
     d$id <- i
     d$id <- purrr::pluck(x, "id")
     d$name <- purrr::pluck(x, "species", "name")
-    d$url <- purrr::pluck(x, "species", "url")
+    d$api <- purrr::pluck(x, "species", "url")
     d$sprite <- purrr::pluck(x, "sprites", "front_default")
     v[[i]] <- d
   }
@@ -54,6 +54,11 @@ fxn_tidy_bulk <- function(x) {
   output <- purrr::map_df(
     .x = x$results,
     .f = purrr::pluck
-  )
+  ) %>%
+    dplyr::mutate(
+      id = basename(url),
+      sprite = paste0("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/", id, ".png")
+    ) %>%
+    dplyr::select(id, name, api = url, sprite)
   return(output)
 }

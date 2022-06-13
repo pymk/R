@@ -11,7 +11,7 @@
 #' }
 #'
 #' @param x Pokemon name or ID.
-#' @param ... Any other optional \href{https://pokeapi.co/docs/v2}{parameter} that can be provided.
+#' @param ... Any other optional \href{https://pokeapi.co/docs/v2}{PokeAPI parameter}.
 #'
 #' @return A dataframe for the requested Pokemon.
 #' @export
@@ -26,7 +26,10 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom rlang arg_match is_missing
 #' @importFrom tibble as_tibble enframe
-#' @importFrom purrr map_df pluck
+#' @importFrom purrr map_df pluck map
+#' @importFrom glue glue
+#' @importFrom gt gt html
+#' @importFrom gtExtras gt_merge_stack gt_img_rows
 get_pokemon <- function(x, ...) {
   params <- list(...)
 
@@ -63,5 +66,14 @@ get_pokemon <- function(x, ...) {
     output <- fxn_tidy_single(parsed)
   }
 
-  return(output)
+  x <- output %>%
+    dplyr::mutate(
+      api = glue::glue("<a href='{api}'>{name}</a>"),
+      api = purrr::map(api, ~ gt::html(as.character(.x)))
+    ) %>%
+    dplyr::select(-name) %>%
+    gt::gt() %>%
+    gtExtras::gt_img_rows(sprite)
+
+  return(x)
 }
